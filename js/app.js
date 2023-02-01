@@ -19,23 +19,25 @@ class Citas {
 
   agregarCita(cita) {
     this.citas = [...this.citas, cita];
-
-    console.log(this.citas);
   }
 
   EliminarCita(id) {
-    this.citas = this.citas.filter((cita) => cita.id !== id);
+    this.citas = this.citas.filter(cita => cita.id !== id);
+  }
+
+  editarCita(citaActualizada) {
+    this.citas = this.citas.map(cita => cita.id === citaActualizada.id ? citaActualizada : cita);
   }
 }
 
 class UI {
-  imprimirAlerta(mensaje, alerta) {
+  imprimirAlerta(mensaje, tipo) {
     // Crear div
     const divMensaje = document.createElement("div");
     divMensaje.classList.add("text-center", "alert", "d-block", "col-12");
 
     // Agregar clase en base al tipo de error
-    if (tipo === "error") {
+    if (tipo === 'error') {
       divMensaje.classList.add("alert-danger");
     } else {
       divMensaje.classList.add("alert-success");
@@ -187,8 +189,11 @@ function nuevaCita(e) {
     ui.imprimirAlerta("Editado correctamente");
 
     // Pasar el objeto de la cita a la edición
+    administrarCitas.editarCita({ ...citaObjt })
+
+    // Regresar el texto del botón a su estado original
     formulario.querySelector("button[type=submit]").textContent =
-    "Crear Cita";
+      "Crear Cita";
 
     // Quitar modo edición
     editando = false;
@@ -235,7 +240,7 @@ function EliminarCita(id) {
 
 // Carga los datos y el modo edición
 function cargarEdicion(cita) {
-  const { mascota, propietario, telefono, fecha, hora, sintomas } = cita;
+  const { mascota, propietario, telefono, fecha, hora, sintomas, id } = cita;
 
   // llenar los input, con los datos que obtienes de la cita seleccionada
   mascotaInput.value = mascota;
